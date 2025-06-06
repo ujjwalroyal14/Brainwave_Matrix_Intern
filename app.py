@@ -51,7 +51,6 @@ model, vectorizer = load_models()
 
 # ---- Text Preprocessing ----
 def preprocess_text(text):
-    """Replicates training preprocessing exactly"""
     text = text.lower()
     text = re.sub(r'[^a-z\s]', '', text)
     words = text.split()
