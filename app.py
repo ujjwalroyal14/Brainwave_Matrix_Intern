@@ -1,52 +1,56 @@
-import streamlit as st
-import pickle
 import os
+import joblib
+import streamlit as st
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import nltk
 
-# Download NLTK data
+# Initialize NLTK
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-# ---- Model Loading with Robust Error Handling ----
+# ---- Model Loading ----
 @st.cache_resource
-def load_model():
+def load_models():
     try:
-        # Get absolute path to model files
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(base_dir, 'models', 'fake_news_model.pkl')
-        vectorizer_path = os.path.join(base_dir, 'models', 'tfidf_vectorizer.pkl')
+        # Get current directory
+        current_dir = os.path.dirname(os.path.abspath(__file__))
         
-        # Verify files exist
+        # Paths to model files in root directory
+        model_path = os.path.join(current_dir, 'fake_news_model.pkl')
+        vectorizer_path = os.path.join(current_dir, 'tfidf_vectorizer.pkl')
+        
+        # Debug: Show loading paths
+        st.write(f"Loading model from: {model_path}")
+        st.write(f"Loading vectorizer from: {vectorizer_path}")
+        
+        # Check if files exist
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model file not found at {model_path}")
         if not os.path.exists(vectorizer_path):
             raise FileNotFoundError(f"Vectorizer file not found at {vectorizer_path}")
             
-        # Load files with explicit encoding
-        with open(model_path, 'rb') as model_file:
-            model = pickle.load(model_file)
-        with open(vectorizer_path, 'rb') as vectorizer_file:
-            vectorizer = pickle.load(vectorizer_file)
-            
-        return model, vectorizer
+        return (
+            joblib.load(model_path),
+            joblib.load(vectorizer_path)
+        )
         
     except Exception as e:
         st.error(f"""
-        ❌ Model loading failed: {str(e)}
+        ❌ Model Loading Failed: {str(e)}
         
-        Required files:
-        1. models/fake_news_model.pkl
-        2. models/tfidf_vectorizer.pkl
+        Required files must be in your root directory:
+        - fake_news_model.pkl
+        - tfidf_vectorizer.pkl
         
-        Please ensure:
-        - Both files exist in the 'models' directory
-        - Files were saved with the same Python version
-        - Files weren't corrupted during upload
+        Please verify:
+        1. Both files are uploaded to your GitHub repo's main branch
+        2. Filenames match exactly (case-sensitive)
+        3. Files were committed and pushed to GitHub
         """)
         st.stop()
 
-model, tfidvect = load_model()
+model, vectorizer = load_models()
 
-# Rest of your Streamlit app code...
+# ---- Rest of your Streamlit app ----
+# (Include your text preprocessing and UI code here)
