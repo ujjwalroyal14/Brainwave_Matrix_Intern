@@ -4,7 +4,7 @@ import re
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
-model = pickle.load(open('model/ffake_news_model.pkl', 'rb'))
+model = pickle.load(open('fake_news_model.pkl', 'rb'))
 tfidvect = pickle.load(open('tfidf_vectorizer.pkl', 'rb'))
 
 
