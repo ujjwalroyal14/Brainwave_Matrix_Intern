@@ -1,0 +1,22 @@
+# Core Data Processing
+numpy==1.24.3
+pandas==2.0.3
+scipy==1.10.1
+
+# Machine Learning
+scikit-learn==1.2.2
+joblib==1.3.2
+nltk==3.8.1
+
+# Web Framework
+flask==2.3.2
+gunicorn==21.2.0
+flask-cors==4.0.0
+werkzeug==2.3.7
+
+# Hyperparameter Tuning (from model.ipynb)
+scikit-optimize==0.9.0
+
+# Visualization (optional)
+matplotlib==3.7.2
+seaborn==0.12.2
