@@ -1,39 +1,47 @@
-import nltk
-nltk.download('stopwords')
-nltk.download('wordnet')
-import os
-import joblib
 import streamlit as st
+import pickle
+import re
 from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
+from nltk.stem.porter import PorterStemmer
 
-# ---- App Configuration ----
+model = pickle.load(open('model/ffake_news_model.pkl', 'rb'))
+tfidvect = pickle.load(open('tfidf_vectorizer.pkl', 'rb'))
+
+
 st.set_page_config(
-    page_title="Fake News Detector",
-    page_icon="🔍",
-    layout="wide"
+    page_title="Fake News Detection",
+    page_icon="assets/logo.jpg"
 )
 
-# ---- Model Loading ----
-@st.cache_resource
-def load_models():
-    try:
-        # Get absolute paths
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(base_dir, 'models', 'fake_news_model.pkl')
-        vectorizer_path = os.path.join(base_dir, 'models', 'tfidf_vectorizer.pkl')
-        
-        # Verify files exist
-        if not all(os.path.exists(p) for p in [model_path, vectorizer_path]):
-            raise FileNotFoundError("Model files not found in 'models/' directory")
-            
-        return joblib.load(model_path), joblib.load(vectorizer_path)
-    except Exception as e:
-        st.error(f"""
-        ❌ Model loading failed: {str(e)}
-        
-        Please ensure:
-        1. The 'models/' directory exists
+
+st.write("# Fake News Detection")
+st.markdown(
+    """
+        A fake news prediction web application using Machine Learning algorithms deployed using streamlit community cloud.
+""")
+st.markdown("## Input:")
+
+text = st.text_area(
+    label="Enter your text to try it.",
+    placeholder="Enter your text to predict whether this is fake or not.",
+    height=200
+)
+st.write(f'You wrote {len(text.split())} words.')
+
+
+# Load model and vectorizer to predict the output
+def predict(text):
+    val_tfidvect = tfidvect.transform([text]).toarray()
+    prediction = 'FAKE' if model.predict(val_tfidvect) == 0 else 'REAL'
+    return prediction
+
+
+if st.button("Predict"):
+    st.markdown("## Output:")
+    if predict(text) == "REAL":
+        st.markdown("#### Looking Real News📰")
+    else:
+        st.markdown("#### Looking Spam⚠️News📰")
         2. It contains 'fake_news_model.pkl' and 'tfidf_vectorizer.pkl'
         3. Files are uploaded to Streamlit Cloud
         """)
