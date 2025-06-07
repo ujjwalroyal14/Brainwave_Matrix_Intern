@@ -121,9 +121,9 @@ if st.button("Predict"):
         with st.spinner("Analyzing..."):
             result = predict(text)
             if result == "REAL":
-                st.success("#### Looking Fake News 📰")
+                st.success("#### Looking Real News 📰")
             else:
-                st.error("#### Looking Real News ⚠️")
+                st.error("#### Looking Fake News ⚠️")
 
 # ---- Rest of your Streamlit app ----
 # (Include your text preprocessing and UI code here)
