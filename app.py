@@ -97,7 +97,18 @@ def predict(text):
         processed_text = preprocess_text(text)
         val_tfidvect = tfidvect.transform([processed_text]).toarray()
         prediction = model.predict(val_tfidvect)[0]
-        return 'FAKE' if prediction == 0 else 'REAL'
+        
+        # Determine and return the result
+        result = 'FAKE' if prediction == 0 else 'REAL'
+        
+        # Display the appropriate message
+        if result == "FAKE":
+            st.error("#### This is likely FAKE NEWS! ⚠️")
+        else:
+            st.success("#### This appears to be REAL NEWS. ✅")
+            
+        return result
+        
     except Exception as e:
         st.error(f"Prediction error: {str(e)}")
         return None
@@ -110,9 +121,9 @@ if st.button("Predict"):
         with st.spinner("Analyzing..."):
             result = predict(text)
             if result == "REAL":
-                st.success("#### Looking Real News 📰")
+                st.success("#### Looking Fake News 📰")
             else:
-                st.error("#### Looking Fake News ⚠️")
+                st.error("#### Looking Real News ⚠️")
 
 # ---- Rest of your Streamlit app ----
 # (Include your text preprocessing and UI code here)
