@@ -3,6 +3,7 @@ import joblib
 import streamlit as st
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from nltk.stem import PorterStemmer
 import nltk
 
 # Initialize NLTK
