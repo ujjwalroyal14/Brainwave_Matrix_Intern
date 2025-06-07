@@ -6,6 +6,12 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
 import nltk
 
+# Streamlit UI
+st.set_page_config(
+    page_title="Fake News Detection",
+    page_icon="🔍"
+)
+
 # Initialize NLTK
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -72,11 +78,6 @@ def preprocess_text(text):
     words = [ps.stem(lemmatizer.lemmatize(w)) for w in words]
     return ' '.join(words)
 
-# Streamlit UI
-st.set_page_config(
-    page_title="Fake News Detection",
-    page_icon="🔍"
-)
 
 st.write("# Fake News Detection")
 st.markdown(
