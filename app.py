@@ -51,6 +51,67 @@ def load_models():
         st.stop()
 
 model, vectorizer = load_models()
+model, tfidvect = load_models()
+
+# Initialize stemmer and lemmatizer
+ps = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
+
+# Text preprocessing
+def preprocess_text(text):
+    text = text.lower()
+    text = re.sub(r'[^a-z\s]', '', text)
+    words = text.split()
+    
+    # Remove stopwords
+    stop_words = set(stopwords.words('english'))
+    words = [w for w in words if w not in stop_words]
+    
+    # Apply both stemming and lemmatization
+    words = [ps.stem(lemmatizer.lemmatize(w)) for w in words]
+    return ' '.join(words)
+
+# Streamlit UI
+st.set_page_config(
+    page_title="Fake News Detection",
+    page_icon="🔍"
+)
+
+st.write("# Fake News Detection")
+st.markdown(
+    """
+    A fake news prediction web application using Machine Learning algorithms deployed using Streamlit.
+    """
+)
+
+text = st.text_area(
+    label="Enter your text to try it:",
+    placeholder="Enter your text to predict whether this is fake or not.",
+    height=200
+)
+st.write(f'You wrote {len(text.split())} words.')
+
+def predict(text):
+    try:
+        processed_text = preprocess_text(text)
+        val_tfidvect = tfidvect.transform([processed_text]).toarray()
+        prediction = model.predict(val_tfidvect)[0]
+        return 'FAKE' if prediction == 0 else 'REAL'
+    except Exception as e:
+        st.error(f"Prediction error: {str(e)}")
+        return None
+
+if st.button("Predict"):
+    st.markdown("## Output:")
+    if len(text.split()) < 3:
+        st.warning("Please enter at least 3 words for accurate prediction")
+    else:
+        with st.spinner("Analyzing..."):
+            result = predict(text)
+            if result == "REAL":
+                st.success("#### Looking Real News 📰")
+            else:
+                st.error("#### Looking Fake News ⚠️")
 
 # ---- Rest of your Streamlit app ----
 # (Include your text preprocessing and UI code here)
