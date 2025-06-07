@@ -27,9 +27,7 @@ def load_models():
         model_path = os.path.join(current_dir, 'fake_news_model.pkl')
         vectorizer_path = os.path.join(current_dir, 'tfidf_vectorizer.pkl')
         
-        # Debug: Show loading paths
-        st.write(f"Loading model from: {model_path}")
-        st.write(f"Loading vectorizer from: {vectorizer_path}")
+
         
         # Check if files exist
         if not os.path.exists(model_path):
