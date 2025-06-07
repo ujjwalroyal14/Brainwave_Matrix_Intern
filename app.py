@@ -50,7 +50,7 @@ def load_models():
         """)
         st.stop()
 
-model, vectorizer = load_models()
+
 model, tfidvect = load_models()
 
 # Initialize stemmer and lemmatizer
