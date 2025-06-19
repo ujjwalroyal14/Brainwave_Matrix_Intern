@@ -58,5 +58,3 @@ if st.button("Predict"):
         st.warning("Enter at least 3 words for accurate results.")
     else:
         result = predict(user_input)
-
-make its correct
